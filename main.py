@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import psycopg2
 
 class GroceryStore:
     def __init__(self, root):
@@ -65,62 +66,44 @@ class GroceryStore:
         self.table.tag_configure("oddrow", background="#D9D9D6")
         self.table.tag_configure("evenrow", background="white")
 
-        # Mock data for a grocery store (replace with your actual data)
-        data = [
-            ("101", "Banana", "Fruits", "Chiquita", "$0.79", "100", "Local Farms", "2023-01-10", "5%", "Aisle 1"),
-            ("102", "Milk", "Dairy", "Organic Farms", "$2.50", "50", "DairyCo", "2023-01-15", "0%", "Refrigerated Section"),
-            ("103", "Bread", "Bakery", "Wonder Bread", "$1.99", "75", "Bakery Delights", "2023-01-12", "10%", "Aisle 3"),
-            ("104", "Eggs", "Dairy", "Farm Fresh", "$1.25", "120", "Eggcellent Farms", "2023-01-20", "8%", "Refrigerated Section"),
-            ("105", "Cereal", "Breakfast", "Kellogg's", "$3.49", "30", "Cereal Haven", "2023-02-01", "15%", "Aisle 2"),
-            ("106", "Tomato", "Vegetables", "Sunshine Farms", "$0.99", "80", "Local Farms", "2023-01-08", "0%", "Produce Section"),
-            ("107", "Chicken", "Meat", "Tyson", "$4.99", "40", "Meat Masters", "2023-01-18", "12%", "Meat Department"),
-            ("108", "Yogurt", "Dairy", "Yoplait", "$1.75", "60", "DairyCo", "2023-01-25", "5%", "Refrigerated Section"),
-            ("109", "Pasta", "Pantry", "Barilla", "$1.49", "90", "Pasta Paradise", "2023-01-14", "10%", "Aisle 4"),
-            ("110", "Apples", "Fruits", "Washington Apples", "$1.29", "70", "Local Farms", "2023-01-09", "3%", "Produce Section"),
-            ("111", "Orange Juice", "Beverages", "Tropicana", "$2.99", "40", "Juice Co.", "2023-01-25", "0%", "Beverage Section"),
-            ("112", "Potatoes", "Vegetables", "Idaho Potatoes", "$0.89", "60", "Local Farms", "2023-01-15", "2%", "Produce Section"),
-            ("113", "Cheese", "Dairy", "Kraft", "$3.29", "25", "DairyCo", "2023-01-30", "5%", "Refrigerated Section"),
-            ("114", "Salmon", "Seafood", "Wild Catch", "$9.99", "15", "Seafood Delights", "2023-02-05", "20%", "Seafood Department"),
-            ("115", "Pineapple", "Fruits", "Dole", "$1.99", "30", "Fruit Haven", "2023-01-12", "0%", "Produce Section"),
-            ("116", "Toothpaste", "Personal Care", "Colgate", "$2.49", "50", "Personal Care Co.", "2023-01-28", "0%", "Health and Beauty Section"),
-            ("117", "Ice Cream", "Frozen", "Ben & Jerry's", "$4.99", "20", "Frozen Delights", "2023-02-10", "15%", "Frozen Foods Section"),
-            ("118", "Shampoo", "Personal Care", "Pantene", "$3.99", "40", "Personal Care Co.", "2023-01-22", "8%", "Health and Beauty Section"),
-            ("119", "Ground Beef", "Meat", "Angus Farms", "$5.49", "35", "Meat Masters", "2023-01-15", "10%", "Meat Department"),
-            ("120", "Lettuce", "Vegetables", "Fresh Farms", "$1.49", "40", "Local Farms", "2023-01-18", "0%", "Produce Section"),
-            ("121", "Peanut Butter", "Pantry", "Skippy", "$2.99", "25", "Pantry Essentials", "2023-02-15", "5%", "Aisle 5"),
-            ("122", "Almond Milk", "Dairy", "Silk", "$3.50", "30", "DairyCo", "2023-02-28", "0%", "Refrigerated Section"),
-            ("123", "Carrots", "Vegetables", "Bunny Farms", "$0.99", "50", "Local Farms", "2023-02-10", "3%", "Produce Section"),
-            ("124", "Pizza", "Frozen", "DiGiorno", "$5.99", "15", "Frozen Delights", "2023-02-18", "10%", "Frozen Foods Section"),
-            ("125", "Mango", "Fruits", "MangoWorld", "$1.49", "40", "Fruit Haven", "2023-02-05", "0%", "Produce Section"),
-            ("126", "Soap", "Personal Care", "Dove", "$1.99", "60", "Personal Care Co.", "2023-02-20", "5%", "Health and Beauty Section"),
-            ("127", "Fish Sticks", "Seafood", "Gorton's", "$4.25", "20", "Seafood Delights", "2023-02-15", "8%", "Seafood Department"),
-            ("128", "Rice", "Pantry", "Uncle Ben's", "$2.49", "50", "Pantry Essentials", "2023-02-10", "0%", "Aisle 6"),
-            ("129", "Orange", "Fruits", "Sunkist", "$0.75", "60", "Local Farms", "2023-02-12", "2%", "Produce Section"),
-            ("130", "Conditioner", "Personal Care", "Herbal Essences", "$3.99", "35", "Personal Care Co.", "2023-02-25", "5%", "Health and Beauty Section"),
-            # Add more rows as needed
-        ]
+        # Connect to PostgreSQL
+        connection = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            password="sigma204"
+        )
 
-        # Loop through data to add to the table
-        for record in data:
-            if count % 2 == 0:
-                self.table.insert(
-                    parent="",
-                    index="end",
-                    iid=count,
-                    text=count,
-                    values=record,
-                    tags=("evenrow"),
-                )
-            else:
-                self.table.insert(
-                    parent="",
-                    index="end",
-                    iid=count,
-                    text=count,
-                    values=record,
-                    tags=("oddrow"),
-                )
-            count += 1
+        # Use the connection to execute SQL queries
+        with connection.cursor() as cursor:
+            # Example query: select all rows from the "inventory" table
+            cursor.execute("SELECT * FROM inventory")
+            data = cursor.fetchall()
+
+            # Loop through data to add to the table
+            for record in data:
+                if count % 2 == 0:
+                    self.table.insert(
+                        parent="",
+                        index="end",
+                        iid=count,
+                        text=count,
+                        values=record,
+                        tags=("evenrow"),
+                    )
+                else:
+                    self.table.insert(
+                        parent="",
+                        index="end",
+                        iid=count,
+                        text=count,
+                        values=record,
+                        tags=("oddrow"),
+                    )
+                count += 1
+
+        # Close the database connection
+        connection.close()
 
     def search_table(self):
         # Get the search term
