@@ -31,6 +31,62 @@ Run the application:
 python main.py
 ```
 
+## Setting Up the Database
+
+1. **Install PostgreSQL:**
+   Make sure you have PostgreSQL installed on your machine. You can download it from [PostgreSQL Downloads](https://www.postgresql.org/download/).
+
+2. **Create a Database:**
+   Open pgAdmin or any PostgreSQL management tool and create a new database named `grocery_store`. You can use the following SQL command in pgAdmin:
+
+   ```sql
+   CREATE DATABASE grocery_store;
+   ```
+
+3. **Create a Table:**
+   After creating the database, execute the following SQL command to create an `inventory` table within the `grocery_store` database:
+
+   ```sql
+   CREATE TABLE inventory (
+       "Product ID" VARCHAR(10),
+       "Product Name" VARCHAR(255),
+       "Category" VARCHAR(50),
+       "Brand" VARCHAR(50),
+       "Price" VARCHAR(10),
+       "Stock Quantity" INTEGER,
+       "Supplier" VARCHAR(255),
+       "Expiry Date" DATE,
+       "Discount" VARCHAR(10),
+       "Location" VARCHAR(50)
+   );
+   ```
+
+4. **Insert Sample Data:**
+   Optionally, you can insert sample data into the `inventory` table:
+
+   ```sql
+   INSERT INTO inventory VALUES
+   ('101', 'Banana', 'Fruits', 'Chiquita', '$0.79', 100, 'Local Farms', '2023-01-10', '5%', 'Aisle 1'),
+   -- Add more rows as needed
+   ```
+
+   Please note that the date format should be 'YYYY-MM-DD'.
+
+5. **Update Python Script:**
+   Open the `main.py` script and update the PostgreSQL connection details:
+
+   ```python
+   # Connect to PostgreSQL
+   connection = psycopg2.connect(
+       host="localhost",
+       database="grocery_store",
+       user="your_postgres_user",
+       password="your_postgres_password"
+   )
+   ```
+
+   Replace `your_postgres_user` and `your_postgres_password` with your PostgreSQL username and password.
+
 ## Usage
 
 - The application window will open, displaying a table with sample data.
