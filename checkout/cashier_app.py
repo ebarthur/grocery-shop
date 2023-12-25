@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import psycopg2
 import tkinter.messagebox
+import re
 
 class GroceryStore:
     def __init__(self, root):
@@ -179,10 +180,39 @@ class GroceryStore:
     def checkout(self):
         selected_items = self.cart_listbox.get(0, tk.END)
         if selected_items:
-            tkinter.messagebox.showinfo("Checkout", f"Items in Cart:\n{', '.join(selected_items)}\n\nCheckout Successful!")
+            total_price = 0.0
+
+            for item in selected_items:
+                # Extract product ID and quantity from the cart item
+                match = re.search(r'\(ID: (\d+)\) - Quantity: (\d+)', item)
+                if match:
+                    product_id, quantity = match.groups()
+
+                    # Iterate through the items in the table and find the corresponding product
+                    found = False
+                    for item_id in self.table.get_children():
+                        values = self.table.item(item_id, 'values')
+                        if values and values[0] == product_id:
+                            found = True
+                            raw_price = values[4]  # Assuming price is in the 5th column
+                            price = float(raw_price.replace('$', ''))  # Remove the dollar sign and convert to float
+                            total_price += int(quantity) * price
+                            break
+
+                    if not found:
+                        tk.messagebox.showinfo("Product Not Found", f"No product found with ID: {product_id}")
+
+
+            # Display the checkout message with the total price
+            checkout_message = f"Items in Cart:\n{', '.join(selected_items)}\n\nTotal Price: ${total_price:.2f}\n\nCheckout Successful!"
+            tk.messagebox.showinfo("Checkout", checkout_message)
+
+            # Clear the shopping cart
             self.cart_listbox.delete(0, tk.END)
         else:
-            tkinter.messagebox.showinfo("Empty Cart", "Your cart is empty. Please add items before checking out.")
+            tk.messagebox.showinfo("Empty Cart", "Your cart is empty. Please add items before checking out.")
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
