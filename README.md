@@ -38,7 +38,7 @@ python main.py
 
 ## Structure
 
-- `main.py`: Contains the main application code, including the `YourApplication` class that sets up the Tkinter window and the table.
+- `main.py`: Contains the main application code, including the `GroceryStore` class that sets up the Tkinter window and the table.
 - `commands.py` (not provided): Add your database-related commands and functions here.
 
 ## Contributing
