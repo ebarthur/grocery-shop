@@ -147,6 +147,17 @@ class GroceryStore:
 
     def add_to_cart(self):
         product_id = self.product_entry.get()
+        quantity = 1  # Default quantity is 1 if not specified
+
+        # Check if a quantity is specified in the product ID (e.g., "123x2" for Product ID 123 and quantity 2)
+        if 'x' in product_id:
+            parts = product_id.split('x', 1)
+            product_id = parts[0]
+            try:
+                quantity = int(parts[1])
+            except ValueError:
+                tk.messagebox.showinfo("Invalid Quantity", "Invalid quantity specified. Using default quantity 1.")
+
         if product_id:
             found = False
             for item_id in self.table.get_children():
@@ -154,7 +165,7 @@ class GroceryStore:
                 if values and values[0] == product_id:
                     found = True
                     product_name = values[1]
-                    self.cart_listbox.insert(tk.END, f"{product_name} (ID: {product_id})")
+                    self.cart_listbox.insert(tk.END, f"{product_name} (ID: {product_id}) - Quantity: {quantity}")
                     self.product_entry.delete(0, tk.END)
                     break
 
@@ -162,6 +173,7 @@ class GroceryStore:
                 tk.messagebox.showinfo("Product Not Found", f"No product found with ID: {product_id}")
         else:
             tk.messagebox.showinfo("Empty Product ID", "Please enter a valid product ID.")
+
 
 
     def checkout(self):
