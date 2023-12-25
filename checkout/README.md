@@ -1,4 +1,3 @@
-
 # Cashier Application README
 
 ## Overview
@@ -11,7 +10,7 @@ This Cashier Application is a simple point-of-sale system that allows cashiers t
 
 - **Search Functionality:** Cashiers can search for products by entering keywords in a search box. The application highlights the rows that match the search term for easy identification.
 
-- **Adding to Cart:** Cashiers can input the Product ID of a desired product in the provided entry field. Upon clicking the "Add to Cart" button, the selected product is added to a shopping cart displayed on the interface.
+- **Adding to Cart:** Cashiers can input the Product ID of a desired product in the provided entry field. Upon clicking the "Add to Cart" button, the selected product is added to a shopping cart displayed on the interface. A new quantity feature has been added: if you type 'Product ID' x (number, e.g., 2), it sets the quantity to the specified number.
 
 - **Checkout:** The "Checkout" button completes the transaction by displaying a messagebox with a summary of the items in the shopping cart. The cart is then cleared for the next transaction.
 
@@ -34,7 +33,7 @@ This Cashier Application is a simple point-of-sale system that allows cashiers t
 
 4. **Interacting with the Application:**
    - Use the search box to find specific products.
-   - Input the Product ID to add products to the cart.
+   - Input the Product ID to add products to the cart. Include a quantity by typing 'Product ID' x (number, e.g., 2) to set the quantity.
    - Click the "Checkout" button to complete the transaction.
 
 ## Contributing
@@ -44,4 +43,3 @@ Contributions to this Cashier Application are welcome. If you encounter any issu
 ## License
 
 This Cashier Application is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
