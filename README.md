@@ -16,13 +16,13 @@ This application uses the `tkinter` library, which is included in the Python sta
 Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/ebarthur/tkinter-table-app.git
+git clone https://github.com/ebarthur/tkinter-gricery-app.git
 ````
 
 Navigate to the project directory:
 
 ```bash
-cd tkinter-table-app
+cd tkinter-grocery-app
 ```
 
 Run the application:
