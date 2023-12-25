@@ -1,5 +1,5 @@
 
-# Tkinter Table Application
+# Tkinter Grocery Application
 
 This is a simple Tkinter application that demonstrates how to create a table using the `ttk.Treeview` widget with scroll bars for displaying production information. The application includes a basic structure with headings and scrollable rows.
 
