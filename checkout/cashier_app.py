@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import psycopg2
+import tkinter.messagebox
 
 class GroceryStore:
     def __init__(self, root):
@@ -166,10 +167,10 @@ class GroceryStore:
     def checkout(self):
         selected_items = self.cart_listbox.get(0, tk.END)
         if selected_items:
-            tk.messagebox.showinfo("Checkout", f"Items in Cart:\n{', '.join(selected_items)}\n\nCheckout Successful!")
+            tkinter.messagebox.showinfo("Checkout", f"Items in Cart:\n{', '.join(selected_items)}\n\nCheckout Successful!")
             self.cart_listbox.delete(0, tk.END)
         else:
-            tk.messagebox.showinfo("Empty Cart", "Your cart is empty. Please add items before checking out.")
+            tkinter.messagebox.showinfo("Empty Cart", "Your cart is empty. Please add items before checking out.")
 
 if __name__ == "__main__":
     root = tk.Tk()
