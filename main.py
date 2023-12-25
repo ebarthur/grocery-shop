@@ -1,3 +1,9 @@
+'''
+This script is the basic snippet or idaa from which I developed
+complex and add-on features to implement a fully-functional
+Cashier Inventory and Sales Management System in other folders. 
+'''
+
 import tkinter as tk
 from tkinter import ttk
 import psycopg2
