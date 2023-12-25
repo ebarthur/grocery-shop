@@ -1,6 +1,4 @@
-Certainly! Here is the complete README file that integrates the instructions for setting up the PostgreSQL database with the Tkinter Grocery Application:
 
-```markdown
 # Tkinter Grocery Application
 
 This is a simple Tkinter application that demonstrates how to create a table using the `ttk.Treeview` widget with scroll bars for displaying production information. The application includes a basic structure with headings and scrollable rows.
@@ -106,4 +104,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
+
