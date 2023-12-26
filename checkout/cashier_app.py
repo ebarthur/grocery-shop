@@ -21,6 +21,7 @@ class GroceryStore:
         style = ttk.Style(self.root)
         style.configure('Treeview', font=(None, 14), rowheight=27)
         style.configure('Treeview.Heading', font=(None, 16))
+        style.configure('Treeview.Row.highlight', background='blue')
 
         # Create record table
         self.table = ttk.Treeview(self.root)
@@ -116,13 +117,22 @@ class GroceryStore:
 
         # Clear previous search highlights
         for row in self.table.get_children():
-            self.table.tag_configure(row, background="white")
+            for col in self.table["columns"]:
+                self.table.tag_configure(f"{row}_{col}", background="white")
 
-        # Highlight rows that match the search term
+        # Highlight rows that match the search term and bring the first match into view
+        first_match_row = None
         for row in self.table.get_children():
             values = self.table.item(row, 'values')
             if any(search_term in str(value).lower() for value in values):
-                self.table.tag_configure(row, background="#C0C0C0")  # Highlight in a different color
+                first_match_row = row
+                for col, value in zip(self.table["columns"], values):
+                    self.table.tag_configure(f"{row}_{col}", background="blue")  # Highlight each cell
+
+        # Bring the first match into view
+        if first_match_row:
+            self.table.see(first_match_row)
+
                 
     def create_cart(self):
         self.cart_label = tk.Label(self.root, text="Shopping Cart", font=("Helvetica", 16, "bold"))
