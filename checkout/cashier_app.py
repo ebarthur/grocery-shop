@@ -181,6 +181,7 @@ class GroceryStore:
         selected_items = self.cart_listbox.get(0, tk.END)
         if selected_items:
             total_price = 0.0
+            receipt_content = "Items in Cart:\n"
 
             for item in selected_items:
                 # Extract product ID and quantity from the cart item
@@ -197,22 +198,36 @@ class GroceryStore:
                             raw_price = values[4]  # Assuming price is in the 5th column
                             price = float(raw_price.replace('$', ''))  # Remove the dollar sign and convert to float
                             total_price += int(quantity) * price
+                            receipt_content += f"{values[1]} (ID: {product_id}) - Quantity: {quantity}\n"
                             break
 
                     if not found:
                         tk.messagebox.showinfo("Product Not Found", f"No product found with ID: {product_id}")
 
+            receipt_content += f"\nTotal Price: ${total_price:.2f}"
+            receipt_content += "\n\nCheckout Successful!"
 
-            # Display the checkout message with the total price
+            # Display the checkout message in a messagebox
             checkout_message = f"Items in Cart:\n{', '.join(selected_items)}\n\nTotal Price: ${total_price:.2f}\n\nCheckout Successful!"
             tk.messagebox.showinfo("Checkout", checkout_message)
+
+            # Open a new window for displaying the receipt
+            receipt_window = tk.Toplevel(self.root)
+            receipt_window.title("Receipt")
+
+            # Create a Text widget for the receipt
+            receipt_text = tk.Text(receipt_window, wrap=tk.WORD, width=60, height=20)
+            receipt_text.pack(pady=10)
+            receipt_text.insert(tk.END, receipt_content)
+
+            # Add a button to close the receipt window
+            close_button = ttk.Button(receipt_window, text="Close", command=receipt_window.destroy)
+            close_button.pack(pady=10)
 
             # Clear the shopping cart
             self.cart_listbox.delete(0, tk.END)
         else:
             tk.messagebox.showinfo("Empty Cart", "Your cart is empty. Please add items before checking out.")
-
-
 
 if __name__ == "__main__":
     root = tk.Tk()
