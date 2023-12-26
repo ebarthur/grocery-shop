@@ -196,11 +196,8 @@ class GroceryStoreManager:
             return cursor.fetchone() is not None
     
     def remove_expired_products(self):
-        # Implement functionality to remove expired products
-        # ...
-
-        # Example: Display a message
-        tk.messagebox.showinfo("Remove Expired Products", "Expired products removed successfully.")
+        # Display a message indicating that you are working on sales data
+            tk.messagebox.showinfo("Remove Expired Products in Progress", "We are currently working on Removing Expired products. Please come back another time.")
 
 class GroceryStoreApp:
     def __init__(self, root):
