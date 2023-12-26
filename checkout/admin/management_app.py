@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox
+import tkinter.simpledialog
 import psycopg2
 import re
 import matplotlib.pyplot as plt
@@ -10,7 +11,18 @@ class GroceryStoreManager:
     def __init__(self, root):
         self.root = root
         self.create_manager_interface()
+        self.connect_to_database()
+        self.app = app
 
+    def connect_to_database(self):
+        # Modify the connection parameters based on your PostgreSQL setup
+        self.connection = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            password="sigma204"
+        )
+        
     def create_manager_interface(self):
         manager_frame = ttk.LabelFrame(self.root, text="Manager Interface")
         manager_frame.pack(pady=10)
@@ -28,11 +40,91 @@ class GroceryStoreManager:
         remove_expired_button.grid(row=0, column=3, padx=5)
 
     def update_inventory(self):
-        # Implement functionality to update inventory
-        # ...
+        # Create a dialog to get product ID
+        product_id = tkinter.simpledialog.askstring("Update Inventory", "Enter Product ID:")
 
-        # Example: Display a message
+        # Check if the product ID is provided
+        if product_id:
+            # Check if the product ID exists in the database
+            if self.check_product_exists(product_id):
+                # Fetch existing data from the database
+                existing_data = self.get_product_data(product_id)
+
+                # Create a new window for updating inventory
+                update_window = tk.Toplevel(self.root)
+                update_window.title("Update Inventory")
+
+                # Create labels and entry widgets for each column
+                labels = ["Product Name", "Category", "Brand", "Price", "Stock Quantity",
+                          "Supplier", "Expiry Date", "Discount", "Location"]
+
+                entry_vars = []
+                entry_widgets = []
+
+                for i, (label_text, existing_value) in enumerate(zip(labels, existing_data)):
+                    label = ttk.Label(update_window, text=label_text + ":")
+                    label.grid(row=i, column=0, padx=5, pady=5, sticky=tk.W)
+
+                    entry_var = tk.StringVar(value=existing_value)
+                    entry = ttk.Entry(update_window, textvariable=entry_var)
+                    entry.grid(row=i, column=1, padx=5, pady=5, sticky=tk.W)
+
+                    entry_vars.append(entry_var)
+                    entry_widgets.append(entry)
+                    
+                # Function to perform the update
+                def perform_update():
+                    # Get values from entry widgets
+                    updated_values = [entry_var.get() for entry_var in entry_vars]
+
+                    # Update the inventory in the database
+                    self.perform_update(product_id, updated_values, update_window)
+
+                # Add a button to perform the update
+                update_button = ttk.Button(update_window, text="Update", command=perform_update)
+                update_button.grid(row=len(labels), column=0, columnspan=2, pady=10)
+
+            else:
+                tk.messagebox.showinfo("Product Not Found", f"No product found with ID: {product_id}")
+
+        else:
+            tk.messagebox.showinfo("Empty Product ID", "Please enter a valid product ID.")
+
+    def check_product_exists(self, product_id):
+        # Check if the product ID exists in the "inventory" table
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT 1 FROM inventory WHERE product_id = %s", (product_id,))
+            return cursor.fetchone() is not None
+
+    def get_product_data(self, product_id):
+        # Fetch data from the "inventory" table where "Product ID" matches
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT product_name, category, brand, price, stock_quantity, "
+                           "supplier, expiry_date, discount, location "
+                           "FROM inventory WHERE product_id = %s", (product_id,))
+            return cursor.fetchone()
+        
+    def perform_update(self, product_id, values, update_window):
+        # Update the inventory in the "inventory" table where "Product ID" matches
+        with self.connection.cursor() as cursor:
+            cursor.execute("UPDATE inventory SET product_name = %s, category = %s, "
+                            "brand = %s, price = %s, stock_quantity = %s, "
+                            "supplier = %s, expiry_date = %s, discount = %s, location = %s "
+                            "WHERE product_id = %s",
+                            (values[0], values[1], values[2], values[3], values[4],
+                             values[5], values[6], values[7], values[8], product_id))
+
+            # Commit the changes to the database
+            self.connection.commit()
+
+        # Display a success message
         tk.messagebox.showinfo("Update Inventory", "Inventory updated successfully.")
+
+        # Close the update window
+        update_window.destroy()
+
+        # Refresh the table to reflect the updated data
+        self.populate_table()
 
     def generate_sales_graph(self):
         # Implement functionality to generate sales graph
