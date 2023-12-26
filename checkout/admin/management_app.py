@@ -125,21 +125,76 @@ class GroceryStoreManager:
 
         # Refresh the table to reflect the updated data
         self.populate_table()
-
+        
     def generate_sales_graph(self):
-        # Implement functionality to generate sales graph
-        # ...
-
-        # Example: Display a message
-        tk.messagebox.showinfo("Sales Graph", "Sales graph generated successfully.")
-
+            # Display a message indicating that you are working on sales data
+            tk.messagebox.showinfo("Sales Data in Progress", "We are currently working on Sales data. Please come back another time.")
+            
     def add_new_product(self):
-        # Implement functionality to add a new product
-        # ...
+        # Create a new window for adding a new product
+        add_product_window = tk.Toplevel(self.root)
+        add_product_window.title("Add New Product")
 
-        # Example: Display a message
-        tk.messagebox.showinfo("Add Product", "New product added successfully.")
+        # Create labels and entry widgets for each column, including "Product ID"
+        labels = ["Product ID", "Product Name", "Category", "Brand", "Price", "Stock Quantity",
+                "Supplier", "Expiry Date", "Discount", "Location"]
 
+        entry_vars = []
+        entry_widgets = []
+
+        for i, label_text in enumerate(labels):
+            label = ttk.Label(add_product_window, text=label_text + ":")
+            label.grid(row=i, column=0, padx=5, pady=5, sticky=tk.W)
+
+            entry_var = tk.StringVar()
+            entry = ttk.Entry(add_product_window, textvariable=entry_var)
+            entry.grid(row=i, column=1, padx=5, pady=5, sticky=tk.W)
+
+            entry_vars.append(entry_var)
+            entry_widgets.append(entry)
+
+        # Function to perform the addition of a new product
+        def perform_addition():
+            # Get values from entry widgets
+            new_product_values = [entry_var.get() for entry_var in entry_vars]
+
+            # Add the new product to the inventory in the database
+            self.perform_addition(new_product_values, add_product_window)
+
+        # Add a button to perform the addition
+        add_button = ttk.Button(add_product_window, text="Add Product", command=perform_addition)
+        add_button.grid(row=len(labels) + 1, column=0, columnspan=2, pady=10)
+
+    def perform_addition(self, values, add_product_window):
+        # Check if the product ID already exists in the "inventory" table
+        if self.check_product_exists(values[0]):
+            tk.messagebox.showinfo("Product ID Exists", f"Product ID {values[0]} already exists. Please use a unique ID.")
+        else:
+            # Insert the new product into the "inventory" table
+            with self.connection.cursor() as cursor:
+                cursor.execute("INSERT INTO inventory (product_id, product_name, category, brand, price, stock_quantity, "
+                            "supplier, expiry_date, discount, location) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                            (values[0], values[1], values[2], values[3], values[4],
+                                values[5], values[6], values[7], values[8], values[9]))
+
+                # Commit the changes to the database
+                self.connection.commit()
+
+            # Display a success message
+            tk.messagebox.showinfo("Add New Product", "New product added successfully.")
+
+            # Close the add product window
+            add_product_window.destroy()
+
+            # Refresh the table to reflect the updated data
+            self.populate_table()
+
+    def check_product_exists(self, product_id):
+        # Check if the product ID exists in the "inventory" table
+        with self.connection.cursor() as cursor:
+            cursor.execute("SELECT 1 FROM inventory WHERE product_id = %s", (product_id,))
+            return cursor.fetchone() is not None
+    
     def remove_expired_products(self):
         # Implement functionality to remove expired products
         # ...
