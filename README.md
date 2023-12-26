@@ -69,10 +69,11 @@ python main.py
    ('101', 'Banana', 'Fruits', 'Chiquita', '$0.79', 100, 'Local Farms', '2023-01-10', '5%', 'Aisle 1'),
    -- Add more rows as needed
    ```
- ```` **UPDATE inventory
+    ```
+    **UPDATE inventory
    SET stock_quantity = 100
    WHERE product_id = '114'::character varying;
-````
+   ```
    Please note that the date format should be 'YYYY-MM-DD'.
 
 5. **Update Python Script:**
