@@ -65,6 +65,9 @@ class GroceryStore:
         search_button.pack()
 
     def populate_table(self):
+        # Clear existing items
+        self.table.delete(*self.table.get_children())
+
         # Create count variable for striped rows
         count = 0
 
@@ -79,7 +82,7 @@ class GroceryStore:
             user="postgres",
             password="sigma204"
         )
-        
+
         # Use the connection to execute SQL queries
         with connection.cursor() as cursor:
             # Example query: select all rows from the "inventory" table
@@ -193,26 +196,46 @@ class GroceryStore:
             total_price = 0.0
             receipt_content = "Items in Cart:\n"
 
-            for item in selected_items:
-                # Extract product ID and quantity from the cart item
-                match = re.search(r'\(ID: (\d+)\) - Quantity: (\d+)', item)
-                if match:
-                    product_id, quantity = match.groups()
+            # Connect to PostgreSQL for database update
+            connection = psycopg2.connect(
+                host="localhost",
+                database="postgres",
+                user="postgres",
+                password="sigma204"
+            )
 
-                    # Iterate through the items in the table and find the corresponding product
-                    found = False
-                    for item_id in self.table.get_children():
-                        values = self.table.item(item_id, 'values')
-                        if values and values[0] == product_id:
-                            found = True
-                            raw_price = values[4]  # Assuming price is in the 5th column
-                            price = float(raw_price.replace('$', ''))  # Remove the dollar sign and convert to float
-                            total_price += int(quantity) * price
-                            receipt_content += f"{values[1]} (ID: {product_id}) - Quantity: {quantity}\n"
-                            break
+            with connection.cursor() as cursor:
+                for item in selected_items:
+                    # Extract product ID and quantity from the cart item
+                    match = re.search(r'\(ID: (\d+)\) - Quantity: (\d+)', item)
+                    if match:
+                        product_id, quantity = match.groups()
 
-                    if not found:
-                        tk.messagebox.showinfo("Product Not Found", f"No product found with ID: {product_id}")
+                        # Fetch the current stock quantity from the database
+                        cursor.execute("SELECT stock_quantity FROM inventory WHERE product_id = %s", (product_id,))
+                        current_quantity = cursor.fetchone()[0]
+
+                        # Update the stock quantity in the database
+                        new_quantity = current_quantity - int(quantity)
+                        cursor.execute("UPDATE inventory SET stock_quantity = %s WHERE product_id = %s", (new_quantity, product_id))
+
+                        # Fetch the price of the product from the database
+                        cursor.execute("SELECT price FROM inventory WHERE product_id = %s", (product_id,))
+                        raw_price = cursor.fetchone()[0]
+                        price = float(raw_price.replace('$', ''))  # Remove the dollar sign and convert to float
+
+                        total_price += int(quantity) * price
+
+                        receipt_content += f"{item}\n"
+
+            # Commit the changes to the database
+            connection.commit()
+
+            # Close the database connection
+            connection.close()
+            
+            # Refresh the table to reflect the updated data
+            self.populate_table()
 
             receipt_content += f"\nTotal Price: ${total_price:.2f}"
             receipt_content += "\n\nCheckout Successful!"
