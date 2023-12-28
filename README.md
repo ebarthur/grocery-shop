@@ -48,16 +48,18 @@ python main.py
 
    ```sql
    CREATE TABLE inventory (
-       "Product ID" VARCHAR(10),
-       "Product Name" VARCHAR(255),
-       "Category" VARCHAR(50),
-       "Brand" VARCHAR(50),
-       "Price" VARCHAR(10),
-       "Stock Quantity" INTEGER,
-       "Supplier" VARCHAR(255),
-       "Expiry Date" DATE,
-       "Discount" VARCHAR(10),
-       "Location" VARCHAR(50)
+    product_id VARCHAR(10),
+    product_name VARCHAR(255),
+    category VARCHAR(50),
+    brand VARCHAR(50),
+    price VARCHAR(10),
+    stock_quantity INTEGER,
+    supplier VARCHAR(255),
+    expiry_date DATE,
+    discount VARCHAR(10),
+    location VARCHAR(50)
+);
+
    );
    ```
 
