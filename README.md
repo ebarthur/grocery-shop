@@ -57,8 +57,7 @@ python main.py
     supplier VARCHAR(255),
     expiry_date DATE,
     discount VARCHAR(10),
-    location VARCHAR(50)
-);
+    location VARCHAR(50));
    ```
 
 4. **Insert Sample Data:**
