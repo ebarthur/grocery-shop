@@ -59,8 +59,6 @@ python main.py
     discount VARCHAR(10),
     location VARCHAR(50)
 );
-
-   );
    ```
 
 4. **Insert Sample Data:**
