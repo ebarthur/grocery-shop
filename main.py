@@ -1,6 +1,6 @@
 '''
 I wrote this code to set as foundation for development.
-This script is the basic snippet or idaa from which I developed
+This script is the basic snippet or idea from which I developed
 complex and add-on features to implement a fully-functional
 Cashier Inventory and Sales Management System in other folders. 
 '''
