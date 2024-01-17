@@ -4,6 +4,7 @@ import tkinter.messagebox
 import tkinter.simpledialog
 import psycopg2
 import re
+import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
