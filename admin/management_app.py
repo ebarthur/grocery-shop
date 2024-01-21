@@ -128,7 +128,7 @@ class GroceryStoreManager:
         self.populate_table()
         
     def generate_sales_graph(self):
-            # Display a message indicating that you are working on sales data
+            # I are working on sales data
             tk.messagebox.showinfo("Sales Data in Progress", "We are currently working on Sales data. Please come back another time.")
             
     def add_new_product(self):
@@ -197,7 +197,7 @@ class GroceryStoreManager:
             return cursor.fetchone() is not None
     
     def remove_expired_products(self):
-        # Display a message indicating that you are working on sales data
+        # I am also working on sales data
             tk.messagebox.showinfo("Remove Expired Products in Progress", "We are currently working on Removing Expired products. Please come back another time.")
 
 class GroceryStoreApp:
@@ -209,21 +209,21 @@ class GroceryStoreApp:
         self.create_buttons()
 
     def create_table(self):
-        # Implement your create_table method here
+        # Implement create_table method here
         # This could include creating a Treeview widget and configuring columns
-        # Populate the table as per your application needs
+        # Populate the table
         pass
 
     def create_cart(self):
-        # Implement your create_cart method here
+        # Implement create_cart method here
         pass
 
     def create_product_entry(self):
-        # Implement your create_product_entry method here
+        # Implement create_product_entry method here
         pass
 
     def create_buttons(self):
-        # Implement your create_buttons method here
+        # Implement create_buttons method here
         pass
 
 if __name__ == "__main__":
