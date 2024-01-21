@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import psycopg2
 import tkinter.messagebox
-import re
+import re # Not using this yet
 
 class GroceryStore:
     def __init__(self, root):
