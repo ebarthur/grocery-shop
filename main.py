@@ -8,6 +8,7 @@ Cashier Inventory and Sales Management System in other folders.
 import tkinter as tk
 from tkinter import ttk
 import psycopg2
+import re # not in use
 
 class GroceryStore:
     def __init__(self, root):
